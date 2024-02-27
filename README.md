@@ -1,8 +1,10 @@
 # GuMormingMusic-SpringBoot
 
+WHUT毕设题目:基于Springboot的在线音乐系统的设计与开发
+
 目前仅实现了后台的部分功能,效果图见下
 
-Vue前端:<https://github.com/GuMorming/GuMormingMusic-Vue>
+此仓库为Java服务器端,Vue前端:<https://github.com/GuMorming/GuMormingMusic-Vue>
 
 ## 暂时的效果图展示
 ![](img/admin/1.png)
