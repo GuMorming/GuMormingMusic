@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.whut.gumorming.mapper.VisitLogMapper">
+    <select id="selectUserViewList" resultType="cn.edu.whut.gumorming.model.response.UserViewResp">
+        select count(distinct ip_address)           as uv,
+               count(create_time)                   as pv,
+               DATE_FORMAT(create_time, '%Y-%m-%d') as `date`
+        from visit_log
+        where create_time &gt; #{startTime}
+          AND create_time &lt;= #{endTime}
+        group by DATE_FORMAT(create_time, '%Y-%m-%d')
+    </select>
+</mapper>

@@ -1,0 +1,115 @@
+server:
+  port: 8888
+spring:
+  # 文件上传限制
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 728017xasdf
+    url: jdbc:mysql://localhost:3306/GuMormingMusic?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    dbcp2:
+      # 初始连接数
+      initial-size: 10
+      # 最小连接池数量
+      min-idle: 10
+      # 配置获取连接等待超时的时间
+      max-wait-millis: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 600000
+      # 配置检测连接是否有效
+      validation-query: SELECT 1 FROM DUAL
+      # 配置检测连接是否有效时间
+      validation-query-timeout: 500
+      # 在获取连接后，确定是否要进行连接空间时间的检查
+      test-while-idle: true
+      # 设置从连接池获取连接时是否检查连接有效性，true检查，false不检查
+      test-on-borrow: false
+      # 设置从连接池归还连接时是否检查连接有效性，true检查，false不检查
+      test-on-return: false
+  data:
+    redis:
+      # Redis服务器地址
+      host: 127.0.0.1
+      # Redis服务器连接端口
+      port: 6379
+      # Redis服务器连接密码（默认为空）
+      password:
+      # 连接超时时间
+      timeout: 10s
+      lettuce:
+        pool:
+          # 连接池最大连接数
+          max-active: 150
+          # 连接池最大阻塞等待时间（使用负值表示没有限制）
+          max-wait: 5000ms
+          # 连接池中的最大空闲连接
+          max-idle: 100
+          # 连接池中的最小空闲连接
+          min-idle: 50
+# MybatisPlus
+mybatis-plus:
+  # *Mapper.xml映射路径
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    #    日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 驼峰匹配下划线
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      # 逻辑删除字段名
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      #auto为ID自增
+      id-type: auto
+  # 实体类扫描包路径
+  type-aliases-package: cn.edu.whut.gumorming.entity
+
+# 线程池配置
+thread:
+  pool:
+    core-pool-size: 5
+    max-pool-size: 10
+    queue-capacity: 50
+    keep-alive-seconds: 60
+# 文件上传策略 local、oss、cos
+upload:
+  strategy: qiniu
+  local:
+    # nginx映射本地文件路径
+    url: http://localhost:8888/
+    # 本地文件存储路径
+    path: /usr/local/upload/
+  # qiniu存储(七牛云)
+  qiniu:
+    cdnPath: ${qiniu.cdnPath}  # 访问域名(给存储桶绑定的二级域名)
+    bucketName: ${qiniu.bucket} # 空间名称bucketName
+    region: ${qiniu.region} # 存储区域 华南(huanan) 华北(huabei)...
+    accessKey: ${qiniu.ak} #accessKey
+    secretKey: ${qiniu.sk}  #secretKey
+
+#Knife4j接口文档
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: cn.edu.whut.gumorming
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn

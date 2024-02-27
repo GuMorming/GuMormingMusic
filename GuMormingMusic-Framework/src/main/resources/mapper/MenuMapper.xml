@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.whut.gumorming.mapper.MenuMapper">
+    <select id="selectPermsByUserId" resultType="String">
+        SELECT DISTINCT m.`perms`
+        FROM user_role ur
+                 LEFT JOIN `role` r ON ur.`role_id` = r.`id`
+                 LEFT JOIN `role_menu` rm ON ur.`role_id` = rm.`role_id`
+                 LEFT JOIN `menu` m ON m.`id` = rm.`menu_id`
+        WHERE user_id = #{userId}
+          AND r.`is_disable` = 0
+          and r.is_delete = 0
+          and m.is_delete = 0
+          AND m.`is_disable` = 0
+          AND m.perms != ''
+    </select>
+
+    <select id="selectMenuVOList" resultType="cn.edu.whut.gumorming.model.response.MenuResponse">
+        SELECT id,
+        parent_id,
+        menu_type,
+        menu_name,
+        path,
+        icon,
+        component,
+        perms,
+        is_hidden,
+        is_disable,
+        order_num,
+        create_time
+        FROM menu
+        <where>
+            <if test="param.keyword != null and param.keyword !=''">
+                and menu_name like concat('%', #{param.keyword}, '%')
+            </if>
+            <if test="param.isDisable != null">
+                and is_disable = #{param.isDisable}
+            </if>
+        </where>
+        order by order_num
+    </select>
+    <select id="selectMenuByUserId" resultType="cn.edu.whut.gumorming.model.response.UserMenuResponse">
+        SELECT DISTINCT m.id,
+                        m.parent_id,
+                        m.menu_name,
+                        m.menu_type,
+                        m.path,
+                        m.icon,
+                        m.order_num,
+                        m.component,
+                        m.is_hidden
+        FROM menu m
+                 INNER JOIN role_menu rm ON m.id = rm.menu_id
+                 INNER JOIN user_role ur ON rm.role_id = ur.role_id
+                 INNER JOIN role r ON ur.role_id = r.id
+        WHERE m.menu_type in ('M', 'C')
+          AND m.is_disable = 0
+          and m.is_delete = 0
+          AND r.is_disable = 0
+          AND ur.user_id = #{userId}
+        ORDER BY m.parent_id, m.order_num
+    </select>
+    <select id="selectMenuTree" resultType="cn.edu.whut.gumorming.model.response.MenuTreeResponse">
+        SELECT id,
+               parent_id,
+               menu_name as label
+        FROM menu
+        WHERE is_disable = 0
+          and is_delete = 0
+        ORDER BY order_num
+    </select>
+    <select id="selectMenuOptions" resultType="cn.edu.whut.gumorming.model.response.MenuOptionResponse">
+        SELECT id        as `value`,
+               parent_id,
+               menu_name as label
+        FROM menu
+        WHERE is_disable = 0
+          and is_delete = 0
+          AND menu_type IN ('M', 'C')
+        ORDER BY order_num
+    </select>
+</mapper>

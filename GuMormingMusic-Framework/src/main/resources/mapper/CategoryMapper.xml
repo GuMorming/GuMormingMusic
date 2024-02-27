@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.edu.whut.gumorming.mapper.CategoryMapper">
+    <select id="selectCategoryHomeList" resultType="cn.edu.whut.gumorming.model.response.CategoryHomeResponse">
+        select c.id, c.category_name, count(s.id) as songCount
+        from category c,
+             song s
+        where s.category_id = c.id
+    </select>
+</mapper>
